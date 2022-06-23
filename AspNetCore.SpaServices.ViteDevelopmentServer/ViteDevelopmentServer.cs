@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace AspNetCore.SpaServices.ViteDevelopmentServer;
@@ -68,7 +67,7 @@ public static class ViteDevelopmentServerMiddleware
 
         var envVars = new Dictionary<string, string>
             {
-                { "PORT", portNumber.ToString(CultureInfo.InvariantCulture) },
+                { "PORT", portNumber.ToString() },
                 { "BROWSER", "none" }, // We don't want Vite to open its own extra browser window pointing to the internal dev server port
             };
 

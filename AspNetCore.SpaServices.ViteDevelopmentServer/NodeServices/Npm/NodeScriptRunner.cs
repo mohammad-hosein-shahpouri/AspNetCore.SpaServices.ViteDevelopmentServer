@@ -21,9 +21,7 @@ internal sealed class NodeScriptRunner : IDisposable
     public NodeScriptRunner(string workingDirectory, string scriptName, string? arguments, IDictionary<string, string>? envVars, string pkgManagerCommand, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
     {
         if (string.IsNullOrEmpty(workingDirectory))
-        {
             throw new ArgumentException("Cannot be null or empty.", nameof(workingDirectory));
-        }
 
         if (string.IsNullOrEmpty(scriptName))
             throw new ArgumentException("Cannot be null or empty.", nameof(scriptName));
@@ -53,12 +51,8 @@ internal sealed class NodeScriptRunner : IDisposable
         };
 
         if (envVars != null)
-        {
             foreach (var keyValuePair in envVars)
-            {
                 processStartInfo.Environment[keyValuePair.Key] = keyValuePair.Value;
-            }
-        }
 
         this.npmProcess = LaunchNodeProcess(processStartInfo, pkgManagerCommand);
         StdOut = new EventedStreamReader(this.npmProcess.StandardOutput);
@@ -90,19 +84,15 @@ internal sealed class NodeScriptRunner : IDisposable
         StdOut.OnReceivedLine += line =>
         {
             if (!string.IsNullOrWhiteSpace(line))
-            {
                 // Node tasks commonly emit ANSI colors, but it wouldn't make sense to forward
                 // those to loggers (because a logger isn't necessarily any kind of terminal)
                 logger.LogInformation(StripAnsiColors(line));
-            }
         };
 
         StdErr.OnReceivedLine += line =>
         {
             if (!string.IsNullOrWhiteSpace(line))
-            {
                 logger.LogError(StripAnsiColors(line));
-            }
         };
 
         // But when it emits incomplete lines, assume this is progress information and
@@ -114,9 +104,7 @@ internal sealed class NodeScriptRunner : IDisposable
             var containsNewline = Array.IndexOf(
                 chunk.Array, '\n', chunk.Offset, chunk.Count) >= 0;
             if (!containsNewline)
-            {
                 Console.Write(chunk.Array, chunk.Offset, chunk.Count);
-            }
         };
     }
 

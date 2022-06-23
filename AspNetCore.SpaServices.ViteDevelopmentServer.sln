@@ -11,7 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E3BE645A-C4B5-4ACE-86B7-5D9F77154A00}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.SpaServices.ViteDevelopmentServer.Test", "AspNetCore.SpaServices.ViteDevelopmentServer.Test\AspNetCore.SpaServices.ViteDevelopmentServer.Test.csproj", "{D76C9D20-C339-4177-8611-021CBD112F62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +28,17 @@ Global
 		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D76C9D20-C339-4177-8611-021CBD112F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D76C9D20-C339-4177-8611-021CBD112F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D76C9D20-C339-4177-8611-021CBD112F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D76C9D20-C339-4177-8611-021CBD112F62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5CA149D5-3B5D-45FF-9915-674B959F4FED} = {9EB40DAE-EB2C-4222-9125-FA3745FA5AE7}
+		{D76C9D20-C339-4177-8611-021CBD112F62} = {E3BE645A-C4B5-4ACE-86B7-5D9F77154A00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FFE6CBE-C93B-4FB5-ABD9-BF11D399F0E4}
