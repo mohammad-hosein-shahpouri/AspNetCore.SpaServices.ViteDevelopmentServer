@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/");
+builder.Services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/build");
 
 var app = builder.Build();
 
@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//app.UseSpaStaticFiles();
+app.UseSpaStaticFiles();
 
 app.UseAuthorization();
 

@@ -1,5 +1,6 @@
 # AspNetCore.SpaServices.ViteDevelopmentServer
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Nuget](https://img.shields.io/nuget/v/AspNetCore.SpaServices.ViteDevelopmentServer)
 
 With this library you will be able to use [Vite.js](https://vitejs.dev) with your SPA in ASP.NET Core.
 
@@ -19,7 +20,7 @@ app.UseSpa(spa =>
     if (app.Environment.IsDevelopment()) spa.UseViteDevelopmentServer(npmScript: "dev");
 });
 ```
-also if you want to use HMR WebSocket (Hot Reload) you should add
+and if you want to use HMR WebSocket (Hot Reload) you should add
 ```typescript
  server: {
   port: Number(process.env.PORT),

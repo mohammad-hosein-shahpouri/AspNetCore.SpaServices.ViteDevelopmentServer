@@ -16,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AspNetCore.SpaServices.ViteDevelopmentServer\Microsoft.AspNetCore.SpaServices.ViteDevelopmentServer.csproj" />
+		<ProjectReference Include="..\AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
