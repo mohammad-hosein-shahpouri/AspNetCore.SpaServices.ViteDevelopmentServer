@@ -6,10 +6,14 @@
 		<Nullable>enable</Nullable>
 		<Description>A library that allows you to use SPAs with Vite.js on ASP.NET Core</Description>
 		<Authors>Mohammad Hosein Shahpouri</Authors>
+		<Copyright>Copyright © Mohammad Hosein Shahpouri. All rights Reserved</Copyright>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/mohammad-hosein-shahpouri/AspNetCore.SpaServices.ViteDevelopmentServer</RepositoryUrl>
+		<Version>1.0.1</Version>
+		<PackageTags>ASP.NET Core;SPA;Vite.js;Vite;Javascript;Typescript</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.6" />
 	</ItemGroup>
-
 </Project>

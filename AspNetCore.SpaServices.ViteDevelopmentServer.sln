@@ -3,9 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.SpaServices.ViteDevelopmentServer", "AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj", "{5CA149D5-3B5D-45FF-9915-674B959F4FED}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{9EB40DAE-EB2C-4222-9125-FA3745FA5AE7}"
+	ProjectSection(SolutionItems) = preProject
+		AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj = AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{86C42E27-5724-4606-A87E-FE12A6C93FC8}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,10 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CA149D5-3B5D-45FF-9915-674B959F4FED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D76C9D20-C339-4177-8611-021CBD112F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D76C9D20-C339-4177-8611-021CBD112F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D76C9D20-C339-4177-8611-021CBD112F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,7 +35,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5CA149D5-3B5D-45FF-9915-674B959F4FED} = {9EB40DAE-EB2C-4222-9125-FA3745FA5AE7}
 		{D76C9D20-C339-4177-8611-021CBD112F62} = {E3BE645A-C4B5-4ACE-86B7-5D9F77154A00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
