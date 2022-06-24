@@ -1,6 +1,6 @@
 # AspNetCore.SpaServices.ViteDevelopmentServer
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Nuget](https://img.shields.io/nuget/v/AspNetCore.SpaServices.ViteDevelopmentServer)
+[![Nuget](https://img.shields.io/nuget/v/AspNetCore.SpaServices.ViteDevelopmentServer)](https://www.nuget.org/packages/AspNetCore.SpaServices.ViteDevelopmentServer/)
 
 With this library you will be able to use [Vite.js](https://vitejs.dev) with your SPA in ASP.NET Core.
 

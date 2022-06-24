@@ -15,12 +15,9 @@ jobs:
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v2
-
     - name: Build
-      run: dotnet build -c Release   
-
+      run: dotnet build -c Release
     - name: Pack nugets
-      run: dotnet pack -c Release --no-build --output .
-
+      run: dotnet pack AspNetCore.SpaServices.ViteDevelopmentServer/AspNetCore.SpaServices.ViteDevelopmentServer.csproj -c Release --no-build --output .
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
