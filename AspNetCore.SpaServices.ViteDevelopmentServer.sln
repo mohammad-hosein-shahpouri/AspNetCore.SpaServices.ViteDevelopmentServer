@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{9EB40DAE-EB2C-4222-9125-FA3745FA5AE7}"
-	ProjectSection(SolutionItems) = preProject
-		AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj = AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{86C42E27-5724-4606-A87E-FE12A6C93FC8}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E3BE645A-C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.SpaServices.ViteDevelopmentServer.Test", "AspNetCore.SpaServices.ViteDevelopmentServer.Test\AspNetCore.SpaServices.ViteDevelopmentServer.Test.csproj", "{D76C9D20-C339-4177-8611-021CBD112F62}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.SpaServices.ViteDevelopmentServer", "AspNetCore.SpaServices.ViteDevelopmentServer\AspNetCore.SpaServices.ViteDevelopmentServer.csproj", "{087C9F9A-5F00-4E3B-BAC4-4C33554D1BBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,12 +29,17 @@ Global
 		{D76C9D20-C339-4177-8611-021CBD112F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D76C9D20-C339-4177-8611-021CBD112F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D76C9D20-C339-4177-8611-021CBD112F62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{087C9F9A-5F00-4E3B-BAC4-4C33554D1BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{087C9F9A-5F00-4E3B-BAC4-4C33554D1BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{087C9F9A-5F00-4E3B-BAC4-4C33554D1BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{087C9F9A-5F00-4E3B-BAC4-4C33554D1BBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D76C9D20-C339-4177-8611-021CBD112F62} = {E3BE645A-C4B5-4ACE-86B7-5D9F77154A00}
+		{087C9F9A-5F00-4E3B-BAC4-4C33554D1BBF} = {9EB40DAE-EB2C-4222-9125-FA3745FA5AE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FFE6CBE-C93B-4FB5-ABD9-BF11D399F0E4}

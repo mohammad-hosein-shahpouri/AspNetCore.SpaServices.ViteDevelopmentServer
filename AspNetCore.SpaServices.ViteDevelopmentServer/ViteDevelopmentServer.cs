@@ -1,23 +1,11 @@
-﻿using AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Npm;
-using AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Util;
-using AspNetCore.SpaServices.ViteDevelopmentServer.Util;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.SpaServices;
-using Microsoft.AspNetCore.SpaServices.Extensions.Util;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-
-namespace AspNetCore.SpaServices.ViteDevelopmentServer;
+﻿namespace AspNetCore.SpaServices.ViteDevelopmentServer;
 
 public static class ViteDevelopmentServerMiddleware
 {
     private const string logCategoryName = "ViteDevelopmentServer";
     private static readonly TimeSpan regexMatchTimeout = TimeSpan.FromSeconds(5);// This is a development-time only feature, so a very long timeout is fine
 
-    public static void Attach(ISpaBuilder spaBuilder, string scriptName)
+    public static async Task Attach(ISpaBuilder spaBuilder, string scriptName)
     {
         var pkgManagerCommand = spaBuilder.Options.PackageManagerCommand;
         var sourcePath = spaBuilder.Options.SourcePath;
@@ -37,24 +25,19 @@ public static class ViteDevelopmentServerMiddleware
 
         var targetUriTask = portTask.ContinueWith(task => new UriBuilder("http", "localhost", task.Result).Uri);
 
-        SpaProxyingExtensions.UseProxyToSpaDevelopmentServer(spaBuilder, async () =>
-        {
-            // On each request, we create a separate startup task with its own timeout. That way, even if
-            // the first request times out, subsequent requests could still work.
-            var timeout = spaBuilder.Options.StartupTimeout;
-            var port = await portTask.WithTimeout(timeout, "The Vite server did not start listening for requests " +
-                $"within the timeout period of {timeout.TotalSeconds} seconds. " +
-                "Check the log output for error information.");
+        var timeout = spaBuilder.Options.StartupTimeout;
 
-            // Everything we proxy is hardcoded to target http://localhost because:
-            // - the requests are always from the local machine (we're not accepting remote
-            //   requests that go directly to the Vite server)
-            // - given that, there's no reason to use https, and we couldn't even if we
-            //   wanted to, because in general the Vite server has no certificate
-            return await targetUriTask.WithTimeout(timeout, "The Vite server did not start listening for requests " +
-                                                      $"within the timeout period of {timeout.TotalSeconds} seconds. " +
-                                                      "Check the log output for error information.");
-        });
+        // Everything we proxy is hardcoded to target http://localhost because:
+        // - the requests are always from the local machine (we're not accepting remote
+        //   requests that go directly to the Vite server)
+        // - given that, there's no reason to use https, and we couldn't even if we
+        //   wanted to, because in general the Vite server has no certificate
+        spaBuilder.UseProxyToSpaDevelopmentServer(await
+            targetUriTask
+            .WithTimeout(timeout, "The Vite server did not start listening for requests " +
+                                                    $"within the timeout period of {timeout.TotalSeconds} seconds. " +
+                                                    "Check the log output for error information.")
+            );
     }
 
     private static async Task<int> StartViteServerAsync(
@@ -123,11 +106,11 @@ public static class ViteDevelopmentServerMiddlewareExtensions
         var spaOptions = spaBuilder.Options;
 
         if (string.IsNullOrEmpty(spaOptions.SourcePath))
-        {
             throw new InvalidOperationException(
                 $"To use {nameof(UseViteDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
-        }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         ViteDevelopmentServerMiddleware.Attach(spaBuilder, npmScript);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 }

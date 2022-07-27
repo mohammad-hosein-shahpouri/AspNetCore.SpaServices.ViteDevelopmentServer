@@ -20,15 +20,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
 app.UseHttpsRedirection();
 
 app.UseSpaStaticFiles();
 
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints => endpoints.MapControllers());
+
 app.UseSpa(spa =>
 {
-    spa.Options.SourcePath = "ClientApp";
+    spa.Options.SourcePath = "ClientApp/";
 
     if (isDevelopment) spa.UseViteDevelopmentServer(npmScript: "dev");
 });

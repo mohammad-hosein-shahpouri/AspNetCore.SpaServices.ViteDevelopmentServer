@@ -1,0 +1,11 @@
+﻿global using AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Npm;
+global using AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Util;
+global using AspNetCore.SpaServices.ViteDevelopmentServer.Util;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.SpaServices;
+global using Microsoft.AspNetCore.SpaServices.Extensions.Util;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using System.Diagnostics;
+global using System.Text.RegularExpressions;

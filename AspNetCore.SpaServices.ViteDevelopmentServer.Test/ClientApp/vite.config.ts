@@ -3,16 +3,15 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    publicDir: 'public',
     build: {
-        outDir: "build"
+        outDir: "build",
     },
     server: {
-        port: Number(process.env.PORT),
+        port: Number(process.env.PORT) || 5173,
         hmr: {
             protocol: 'ws',
             host: 'localhost'
-        }
+        },
     },
     plugins: [react()],
 })
