@@ -5,7 +5,7 @@ public static class ViteDevelopmentServerMiddleware
     private const string logCategoryName = "ViteDevelopmentServer";
     private static readonly TimeSpan regexMatchTimeout = TimeSpan.FromSeconds(5);// This is a development-time only feature, so a very long timeout is fine
 
-    public static async Task Attach(ISpaBuilder spaBuilder, string scriptName)
+    public static async void Attach(ISpaBuilder spaBuilder, string scriptName)
     {
         var pkgManagerCommand = spaBuilder.Options.PackageManagerCommand;
         var sourcePath = spaBuilder.Options.SourcePath;
@@ -32,12 +32,12 @@ public static class ViteDevelopmentServerMiddleware
         //   requests that go directly to the Vite server)
         // - given that, there's no reason to use https, and we couldn't even if we
         //   wanted to, because in general the Vite server has no certificate
-        spaBuilder.UseProxyToSpaDevelopmentServer(await
-            targetUriTask
+        var uri = await targetUriTask
             .WithTimeout(timeout, "The Vite server did not start listening for requests " +
                                                     $"within the timeout period of {timeout.TotalSeconds} seconds. " +
-                                                    "Check the log output for error information.")
-            );
+                                                    "Check the log output for error information.");
+
+        spaBuilder.UseProxyToSpaDevelopmentServer(uri);
     }
 
     private static async Task<int> StartViteServerAsync(
@@ -109,8 +109,6 @@ public static class ViteDevelopmentServerMiddlewareExtensions
             throw new InvalidOperationException(
                 $"To use {nameof(UseViteDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         ViteDevelopmentServerMiddleware.Attach(spaBuilder, npmScript);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 }
