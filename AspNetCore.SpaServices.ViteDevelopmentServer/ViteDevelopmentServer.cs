@@ -3,9 +3,8 @@
 public static class ViteDevelopmentServerMiddleware
 {
     private const string logCategoryName = "ViteDevelopmentServer";
-    private static readonly TimeSpan regexMatchTimeout = TimeSpan.FromSeconds(5);// This is a development-time only feature, so a very long timeout is fine
 
-    public static async void Attach(ISpaBuilder spaBuilder, string scriptName)
+    public static void Attach(ISpaBuilder spaBuilder, string scriptName)
     {
         var pkgManagerCommand = spaBuilder.Options.PackageManagerCommand;
         var sourcePath = spaBuilder.Options.SourcePath;
@@ -21,26 +20,14 @@ public static class ViteDevelopmentServerMiddleware
         var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
         var logger = LoggerFinder.GetOrCreateLogger(appBuilder, logCategoryName);
         var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
-        var portTask = StartViteServerAsync(sourcePath, scriptName, pkgManagerCommand, devServerPort, logger, diagnosticSource, applicationStoppingToken);
+        var port = StartViteServer(sourcePath, scriptName, pkgManagerCommand, devServerPort, logger, diagnosticSource, applicationStoppingToken);
 
-        var targetUriTask = portTask.ContinueWith(task => new UriBuilder("http", "localhost", task.Result).Uri);
+        var targetUri = new UriBuilder("http", "localhost", port).Uri;
 
-        var timeout = spaBuilder.Options.StartupTimeout;
-
-        // Everything we proxy is hardcoded to target http://localhost because:
-        // - the requests are always from the local machine (we're not accepting remote
-        //   requests that go directly to the Vite server)
-        // - given that, there's no reason to use https, and we couldn't even if we
-        //   wanted to, because in general the Vite server has no certificate
-        var uri = await targetUriTask
-            .WithTimeout(timeout, "The Vite server did not start listening for requests " +
-                                                    $"within the timeout period of {timeout.TotalSeconds} seconds. " +
-                                                    "Check the log output for error information.");
-
-        spaBuilder.UseProxyToSpaDevelopmentServer(uri);
+        spaBuilder.UseProxyToSpaDevelopmentServer(targetUri);
     }
 
-    private static async Task<int> StartViteServerAsync(
+    private static int StartViteServer(
         string sourcePath, string scriptName, string pkgManagerCommand, int portNumber, ILogger logger, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
     {
         if (portNumber == default(int))
@@ -57,26 +44,6 @@ public static class ViteDevelopmentServerMiddleware
         var scriptRunner =
             new NodeScriptRunner(sourcePath, scriptName, null, envVars, pkgManagerCommand, diagnosticSource, applicationStoppingToken);
         scriptRunner.AttachToLogger(logger);
-
-        using (var stdErrReader = new EventedStreamStringReader(scriptRunner.StdOut))
-        {
-            try
-            {
-                // Although the React dev server may eventually tell us the URL it's listening on,
-                // it doesn't do so until it's finished compiling, and even then only if there were
-                // no compiler warnings. So instead of waiting for that, consider it ready as soon
-                // as it starts listening for requests.
-                await scriptRunner.StdOut.WaitForMatch(
-                    new Regex("dev server running at", RegexOptions.None, regexMatchTimeout));
-            }
-            catch (EndOfStreamException ex)
-            {
-                throw new InvalidOperationException(
-                    $"The NPM script '{scriptName}' exited without indicating that the " +
-                    $"Vite server was listening for requests. The error output was: " +
-                    $"{stdErrReader.ReadAsString()}", ex);
-            }
-        }
 
         return portNumber;
     }

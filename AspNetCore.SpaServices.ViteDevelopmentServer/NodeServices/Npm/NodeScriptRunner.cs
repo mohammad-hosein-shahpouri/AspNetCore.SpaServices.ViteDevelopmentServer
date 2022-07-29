@@ -1,8 +1,4 @@
-﻿using AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Util;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Npm;
 
