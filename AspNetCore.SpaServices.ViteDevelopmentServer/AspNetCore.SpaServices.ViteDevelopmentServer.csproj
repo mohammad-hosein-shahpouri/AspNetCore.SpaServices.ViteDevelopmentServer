@@ -9,7 +9,6 @@
 		<Copyright>Copyright © Mohammad Hosein Shahpouri. All rights Reserved</Copyright>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/mohammad-hosein-shahpouri/AspNetCore.SpaServices.ViteDevelopmentServer</RepositoryUrl>
-		<Version>1.0.3</Version>
 		<PackageTags>ASP.NET Core;SPA;Vite.js;Vite;Javascript;Typescript</PackageTags>
 	</PropertyGroup>
 
