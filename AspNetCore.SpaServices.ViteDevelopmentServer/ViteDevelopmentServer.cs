@@ -1,10 +1,14 @@
-﻿namespace AspNetCore.SpaServices.ViteDevelopmentServer;
+﻿using AspNetCore.SpaServices.ViteDevelopmentServer.Enums;
+using AspNetCore.SpaServices.ViteDevelopmentServer.Interfaces;
+
+namespace AspNetCore.SpaServices.ViteDevelopmentServer;
 
 public static class ViteDevelopmentServerMiddleware
 {
     private const string logCategoryName = "ViteDevelopmentServer";
+    private static JsRuntime runtime = JsRuntime.Node;
 
-    public static void Attach(ISpaBuilder spaBuilder, string scriptName)
+    public static void Attach(ISpaBuilder spaBuilder, string scriptName, JsRuntime runtime)
     {
         var pkgManagerCommand = spaBuilder.Options.PackageManagerCommand;
         var sourcePath = spaBuilder.Options.SourcePath;
@@ -20,7 +24,7 @@ public static class ViteDevelopmentServerMiddleware
         var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
         var logger = LoggerFinder.GetOrCreateLogger(appBuilder, logCategoryName);
         var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
-        var port = StartViteServer(sourcePath, scriptName, pkgManagerCommand, devServerPort, logger, diagnosticSource, applicationStoppingToken);
+        var port = StartViteServer(sourcePath, scriptName, pkgManagerCommand, devServerPort, logger, diagnosticSource, runtime, applicationStoppingToken);
 
         var targetUri = new UriBuilder("http", "localhost", port).Uri;
 
@@ -28,9 +32,11 @@ public static class ViteDevelopmentServerMiddleware
     }
 
     private static int StartViteServer(
-        string sourcePath, string scriptName, string pkgManagerCommand, int portNumber, ILogger logger, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
+        string sourcePath, string scriptName, string pkgManagerCommand,
+        int portNumber, ILogger logger, DiagnosticSource diagnosticSource,
+        JsRuntime runtime, CancellationToken cancellationToken)
     {
-        if (portNumber == default(int))
+        if (portNumber == default)
             portNumber = TcpPortFinder.FindAvailablePort();
 
         logger.LogInformation($"Starting Vite server on port {portNumber}...");
@@ -41,9 +47,14 @@ public static class ViteDevelopmentServerMiddleware
                 { "BROWSER", "none" }, // We don't want Vite to open its own extra browser window pointing to the internal dev server port
             };
 
-        var scriptRunner =
-            new NodeScriptRunner(sourcePath, scriptName, null, envVars, pkgManagerCommand, diagnosticSource, applicationStoppingToken);
-        scriptRunner.AttachToLogger(logger);
+        IScriptRunner? scriptRunner = runtime switch
+        {
+            JsRuntime.Node => new NodeScriptRunner(sourcePath, scriptName, null, envVars, pkgManagerCommand, diagnosticSource, cancellationToken),
+            JsRuntime.Bun => new BunScriptRunner(sourcePath, scriptName, null, envVars, pkgManagerCommand, diagnosticSource, cancellationToken),
+            _ => null
+        };
+
+        scriptRunner?.AttachToLogger(logger);
 
         return portNumber;
     }
@@ -66,7 +77,7 @@ public static class ViteDevelopmentServerMiddlewareExtensions
     /// <param name="npmScript">The name of the script in your package.json file that launches the Vite server.</param>
     public static void UseViteDevelopmentServer(
         this ISpaBuilder spaBuilder,
-        string npmScript)
+        string npmScript, JsRuntime runtime = JsRuntime.Node)
     {
         ArgumentNullException.ThrowIfNull(spaBuilder, nameof(spaBuilder));
 
@@ -76,6 +87,6 @@ public static class ViteDevelopmentServerMiddlewareExtensions
             throw new InvalidOperationException(
                 $"To use {nameof(UseViteDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
 
-        ViteDevelopmentServerMiddleware.Attach(spaBuilder, npmScript);
+        ViteDevelopmentServerMiddleware.Attach(spaBuilder, npmScript, runtime);
     }
 }

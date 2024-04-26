@@ -1,4 +1,5 @@
 using AspNetCore.SpaServices.ViteDevelopmentServer;
+using AspNetCore.SpaServices.ViteDevelopmentServer.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 var isDevelopment = builder.Environment.IsDevelopment();
@@ -33,6 +34,7 @@ app.UseSpa(spa =>
     spa.Options.SourcePath = "ClientApp";
 
     if (isDevelopment)
-        spa.UseViteDevelopmentServer(npmScript: "dev");
+        spa.UseViteDevelopmentServer(npmScript: "dev", 
+            runtime: JsRuntime.Bun);
 });
 app.Run();

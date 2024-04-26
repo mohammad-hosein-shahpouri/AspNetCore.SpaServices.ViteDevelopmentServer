@@ -7,15 +7,15 @@ namespace AspNetCore.SpaServices.ViteDevelopmentServer.NodeServices.Npm;
 /// Executes the <c>script</c> entries defined in a <c>package.json</c> file,
 /// capturing any output written to stdio.
 /// </summary>
-internal sealed class NodeScriptRunner : IDisposable, IScriptRunner
+internal sealed class BunScriptRunner : IDisposable, IScriptRunner
 {
-    private Process? npmProcess;
+    private Process? bunProcess;
     public EventedStreamReader StdOut { get; }
     public EventedStreamReader StdErr { get; }
 
     private static readonly Regex AnsiColorRegex = new Regex("\x001b\\[[0-9;]*m", RegexOptions.None, TimeSpan.FromSeconds(1));
 
-    public NodeScriptRunner(string workingDirectory, string scriptName, string? arguments, IDictionary<string, string>? envVars, string pkgManagerCommand, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
+    public BunScriptRunner(string workingDirectory, string scriptName, string? arguments, IDictionary<string, string>? envVars, string pkgManagerCommand, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
     {
         if (string.IsNullOrEmpty(workingDirectory))
             throw new ArgumentException("Cannot be null or empty.", nameof(workingDirectory));
@@ -30,7 +30,7 @@ internal sealed class NodeScriptRunner : IDisposable, IScriptRunner
         var completeArguments = $"run {scriptName} -- {arguments ?? string.Empty}";
         if (OperatingSystem.IsWindows())
         {
-            // On Windows, the node executable is a .cmd file, so it can't be executed
+            // On Windows, theBun executable is a .cmd file, so it can't be executed
             // directly (except with UseShellExecute=true, but that's no good, because
             // it prevents capturing stdio). So we need to invoke it via "cmd /c".
             exeToRun = "cmd";
@@ -51,21 +51,21 @@ internal sealed class NodeScriptRunner : IDisposable, IScriptRunner
             foreach (var keyValuePair in envVars)
                 processStartInfo.Environment[keyValuePair.Key] = keyValuePair.Value;
 
-        this.npmProcess = LaunchNodeProcess(processStartInfo, pkgManagerCommand);
-        StdOut = new EventedStreamReader(this.npmProcess.StandardOutput);
-        StdErr = new EventedStreamReader(this.npmProcess.StandardError);
+        this.bunProcess = LaunchNodeProcess(processStartInfo, pkgManagerCommand);
+        StdOut = new EventedStreamReader(this.bunProcess.StandardOutput);
+        StdErr = new EventedStreamReader(this.bunProcess.StandardError);
 
         applicationStoppingToken.Register(((IDisposable)this).Dispose);
 
-        if (diagnosticSource.IsEnabled("Microsoft.AspNetCore.NodeServices.Npm.NpmStarted"))
+        if (diagnosticSource.IsEnabled("Microsoft.AspNetCore.NodeServices.Bun.BunStarted"))
         {
             WriteDiagnosticEvent(
                 diagnosticSource,
-                "Microsoft.AspNetCore.NodeServices.Npm.NpmStarted",
+                "Microsoft.AspNetCore.NodeServices.Bun.BunStarted",
                 new
                 {
                     processStartInfo = processStartInfo,
-                    process = this.npmProcess
+                    process = this.bunProcess
                 });
         }
 
@@ -77,11 +77,11 @@ internal sealed class NodeScriptRunner : IDisposable, IScriptRunner
 
     public void AttachToLogger(ILogger logger)
     {
-        // When the node task emits complete lines, pass them through to the real logger
+        // When theBun task emits complete lines, pass them through to the real logger
         StdOut.OnReceivedLine += line =>
         {
             if (!string.IsNullOrWhiteSpace(line))
-                // Node tasks commonly emit ANSI colors, but it wouldn't make sense to forward
+                //Bun tasks commonly emit ANSI colors, but it wouldn't make sense to forward
                 // those to loggers (because a logger isn't necessarily any kind of terminal)
                 logger.LogInformation(StripAnsiColors(line));
         };
@@ -132,10 +132,10 @@ internal sealed class NodeScriptRunner : IDisposable, IScriptRunner
 
     void IDisposable.Dispose()
     {
-        if (this.npmProcess != null && !this.npmProcess.HasExited)
+        if (this.bunProcess != null && !this.bunProcess.HasExited)
         {
-            this.npmProcess.Kill(entireProcessTree: true);
-            this.npmProcess = null;
+            this.bunProcess.Kill(entireProcessTree: true);
+            this.bunProcess = null;
         }
     }
 }
