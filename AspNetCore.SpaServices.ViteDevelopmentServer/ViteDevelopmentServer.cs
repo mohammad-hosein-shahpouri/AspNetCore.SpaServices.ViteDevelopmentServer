@@ -6,11 +6,16 @@ namespace AspNetCore.SpaServices.ViteDevelopmentServer;
 public static class ViteDevelopmentServerMiddleware
 {
     private const string logCategoryName = "ViteDevelopmentServer";
-    private static JsRuntime runtime = JsRuntime.Node;
 
     public static void Attach(ISpaBuilder spaBuilder, string scriptName, JsRuntime runtime)
     {
-        var pkgManagerCommand = spaBuilder.Options.PackageManagerCommand;
+        var pkgManagerCommand = runtime switch // spaBuilder.Options.PackageManagerCommand
+        {
+            JsRuntime.Node => "npm",
+            JsRuntime.Bun => "bun",
+            _ => throw new ArgumentException("Cannot be null or empty", nameof(runtime))
+        };
+
         var sourcePath = spaBuilder.Options.SourcePath;
         var devServerPort = spaBuilder.Options.DevServerPort;
         if (string.IsNullOrEmpty(sourcePath))

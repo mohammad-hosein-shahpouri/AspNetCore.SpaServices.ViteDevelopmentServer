@@ -27,7 +27,7 @@ internal sealed class BunScriptRunner : IDisposable, IScriptRunner
             throw new ArgumentException("Cannot be null or empty.", nameof(pkgManagerCommand));
 
         var exeToRun = pkgManagerCommand;
-        var completeArguments = $"run {scriptName} -- {arguments ?? string.Empty}";
+        var completeArguments = $"run -b {scriptName} -- {arguments ?? string.Empty}";
         if (OperatingSystem.IsWindows())
         {
             // On Windows, theBun executable is a .cmd file, so it can't be executed

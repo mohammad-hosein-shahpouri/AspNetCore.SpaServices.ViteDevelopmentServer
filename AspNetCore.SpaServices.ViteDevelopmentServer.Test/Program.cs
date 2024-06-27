@@ -28,7 +28,7 @@ app.UseSpaStaticFiles();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => endpoints.MapControllers());
+app.UseEndpoints(_ => { });
 app.UseSpa(spa =>
 {
     spa.Options.SourcePath = "ClientApp";
