@@ -7,8 +7,9 @@ public static class ViteDevelopmentServerMiddleware
 {
     private const string logCategoryName = "ViteDevelopmentServer";
 
-    public static void Attach(ISpaBuilder spaBuilder, string scriptName, JsRuntime runtime)
+    public static void Attach(ISpaBuilder spaBuilder, string scriptName, JsRuntime runtime, bool useHttps)
     {
+        var scheme = useHttps ? "https" : "http";
         var pkgManagerCommand = runtime switch // spaBuilder.Options.PackageManagerCommand
         {
             JsRuntime.Node => "npm",
@@ -19,10 +20,14 @@ public static class ViteDevelopmentServerMiddleware
         var sourcePath = spaBuilder.Options.SourcePath;
         var devServerPort = spaBuilder.Options.DevServerPort;
         if (string.IsNullOrEmpty(sourcePath))
+        {
             throw new ArgumentException("Cannot be null or empty", nameof(sourcePath));
+        }
 
         if (string.IsNullOrEmpty(scriptName))
+        {
             throw new ArgumentException("Cannot be null or empty", nameof(scriptName));
+        }
 
         // Start Vite and attach to middleware pipeline
         var appBuilder = spaBuilder.ApplicationBuilder;
@@ -31,20 +36,27 @@ public static class ViteDevelopmentServerMiddleware
         var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
         var port = StartViteServer(sourcePath, scriptName, pkgManagerCommand, devServerPort, logger, diagnosticSource, runtime, applicationStoppingToken);
 
-        var targetUri = new UriBuilder("http", "localhost", port).Uri;
+        var targetUri = new UriBuilder(scheme, "localhost", port).Uri;
 
         spaBuilder.UseProxyToSpaDevelopmentServer(targetUri);
     }
 
     private static int StartViteServer(
-        string sourcePath, string scriptName, string pkgManagerCommand,
-        int portNumber, ILogger logger, DiagnosticSource diagnosticSource,
-        JsRuntime runtime, CancellationToken cancellationToken)
+        string sourcePath,
+        string scriptName,
+        string pkgManagerCommand,
+        int portNumber,
+        ILogger logger,
+        DiagnosticSource diagnosticSource,
+        JsRuntime runtime,
+        CancellationToken cancellationToken)
     {
         if (portNumber == default)
+        {
             portNumber = TcpPortFinder.FindAvailablePort();
+        }
 
-        logger.LogInformation($"Starting Vite server on port {portNumber}...");
+        logger.LogInformation("Starting Vite server on port {portNumber}...", portNumber);
 
         var envVars = new Dictionary<string, string>
             {
@@ -80,9 +92,13 @@ public static class ViteDevelopmentServerMiddlewareExtensions
     /// </summary>
     /// <param name="spaBuilder">The <see cref="ISpaBuilder"/>.</param>
     /// <param name="npmScript">The name of the script in your package.json file that launches the Vite server.</param>
+    /// <param name="runtime">The JS Runtime used for running the script.</param>
+    /// <param name="useHttps">Determines if https is be used instead of http for the proxy request.</param>
     public static void UseViteDevelopmentServer(
         this ISpaBuilder spaBuilder,
-        string npmScript, JsRuntime runtime = JsRuntime.Node)
+        string npmScript,
+        JsRuntime runtime = JsRuntime.Node,
+        bool useHttps = false)
     {
         ArgumentNullException.ThrowIfNull(spaBuilder, nameof(spaBuilder));
 
@@ -92,6 +108,6 @@ public static class ViteDevelopmentServerMiddlewareExtensions
             throw new InvalidOperationException(
                 $"To use {nameof(UseViteDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
 
-        ViteDevelopmentServerMiddleware.Attach(spaBuilder, npmScript, runtime);
+        ViteDevelopmentServerMiddleware.Attach(spaBuilder, npmScript, runtime, useHttps);
     }
 }
