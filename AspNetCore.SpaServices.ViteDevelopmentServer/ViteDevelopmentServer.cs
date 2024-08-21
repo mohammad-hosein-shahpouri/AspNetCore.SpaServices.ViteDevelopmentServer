@@ -51,18 +51,23 @@ public static class ViteDevelopmentServerMiddleware
         JsRuntime runtime,
         CancellationToken cancellationToken)
     {
+        // When no port is specified, we'll find an available port
         if (portNumber == default)
         {
-            portNumber = TcpPortFinder.FindAvailablePort();
+            portNumber = TcpPortFinder.FindAvailablePort(null);
         }
 
-        logger.LogInformation("Starting Vite server on port {portNumber}...", portNumber);
+        // Find an available port for the HMR server
+        var hmrPortNumber = TcpPortFinder.FindAvailablePort(portNumber);
+
+        logger.LogInformation("Starting Vite server on port {portNumber}... Hot Module Reload port set to {hmrPortNumber}...", portNumber, hmrPortNumber);
 
         var envVars = new Dictionary<string, string>
-            {
-                { "PORT", portNumber.ToString() },
-                { "BROWSER", "none" }, // We don't want Vite to open its own extra browser window pointing to the internal dev server port
-            };
+        {
+            { "PORT", portNumber.ToString() },
+            { "HMR_PORT", hmrPortNumber.ToString() },
+            { "BROWSER", "none" }, // We don't want Vite to open its own extra browser window pointing to the internal dev server port
+        };
 
         IScriptRunner? scriptRunner = runtime switch
         {

@@ -17,7 +17,7 @@ app.UseSpa(spa =>
 {
     spa.Options.SourcePath = "ClientApp";
 
-    if (app.Environment.IsDevelopment()) spa.UseViteDevelopmentServer(npmScript: "dev");
+    if (app.Environment.IsDevelopment()) spa.UseViteDevelopmentServer(npmScript: "dev", useHttps: true);
 });
 ```
 and if you want to use HMR WebSocket (Hot Reload) you should add
@@ -25,8 +25,9 @@ and if you want to use HMR WebSocket (Hot Reload) you should add
  server: {
   port: Number(process.env.PORT),
   hmr: {
-      protocol: 'ws',
-      host: 'localhost'
+      protocol: 'wss',
+      host: 'localhost',
+	  port: Number(process.env.HMR_PORT)
     }
 }
 ```
